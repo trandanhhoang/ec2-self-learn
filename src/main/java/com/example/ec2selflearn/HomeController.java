@@ -11,7 +11,7 @@ public class HomeController {
 
     @GetMapping
     public String test() {
-        return "Tran Danh Hoang " + "service1";
+        return "Tran Danh Hoang trigger" + "service1";
     }
 
 }
