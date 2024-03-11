@@ -2,7 +2,7 @@ name: CICD
 
 on:
   push:
-    branches: [master]
+    branches: [sit]
 
 jobs:
   build:
@@ -17,20 +17,12 @@ jobs:
           java-version: '17'
       - name: Build Project
         run: ./gradlew build
-      - name: Login to the docker hub
-        run: docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-      - name: Build docker image
-        run: docker build -t kevintran5920/ec2-test .
-      - name: Publish image to docker hub
-        run: docker push kevintran5920/ec2-test:latest
 
   deploy:
     needs: build
     runs-on: [aws-ec2]
     steps:
-      - name: Pull image from docker hub
-        run: docker pull kevintran5920/ec2-test:latest
       - name: Delete old container
-        run: docker rm -f springboot-example-container
+        run: docker rmi $ (docker images -a -q)
       - name: Run docker container
-        run: docker run -d -p 8080:8080 --name springboot-example-container kevintran5920/ec2-test
+        run: docker-compose up -d
